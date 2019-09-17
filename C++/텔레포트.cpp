@@ -1,83 +1,67 @@
 #include<iostream>
 #include<cmath>
-#include<cstring>
-#include<algorithm>
-#include<vector>
 
 using namespace std;
 int n, t, m;
-bool sp[1000][1000];
-bool check[1000];
+bool sp[1000];
 int xs[1000];
 int ys[1000];
-int d[1000][1000];
-
-int go(int i, int j) {
-	int sx = xs[i], sy = ys[i];
-	int dx = xs[j], dy = ys[j];
-	if (sp[sx][sy] and sp[dx][dy]) {
-		int temp = abs(sx - dx) + abs(sy - dy);
-		if (temp < t) return temp;
-		else return t;
-	}
-	if (d[i][j] != -1) {
-		return d[i][j];
-	}
-	//cout << i << " " << j << "---------------" << endl;
-	int answer = abs(sx - dx) + abs(sy - dy);
-	for (int k = 0; k < n; k++) {
-		if (!check[k]) {
-			check[k] = true;
-			//cout << i << " " << k << " " << j << endl;
-			int temp = go(i, k) + go(k, j);
-			if (answer > temp) {
-				answer = temp;
-			}
-			check[k] = false;
-		}
-	}
-	//cout << i << " " << j << " : " << answer << endl;
-	bool ok = true;
-	for (int k = 0; k < n; k++) {
-		if (check[k] and (k != i and k != j)) {
-			ok = false;
-			break;
-		}
-	}
-	if (ok) {
-		d[i][j] = answer;
-		d[j][i] = answer;
-	}
-	return answer;
-}
 
 int main() {
-	memset(sp, false, sizeof(sp));
-	memset(check, false, sizeof(check));
-	memset(d, -1, sizeof(d));
 	cin >> n >> t;
 	for (int i = 0; i < n; i++) {
-		int s, x, y;
-		cin >> s >> x >> y;
-		if (s) {
-			sp[x][y] = true;
-		}
-		xs[i] = x, ys[i] = y;
+		int a, b, c;
+		cin >> a >> b >> c;
+		if (a == 1) sp[i] = true;
+		xs[i] = b, ys[i] = c;
 	}
 	cin >> m;
 	for (int i = 0; i < m; i++) {
-		int src, dst;
-		cin >> src >> dst;
-		check[src - 1] = true;
-		check[dst - 1] = true;
-		cout << go(src - 1, dst - 1) << endl;
-		check[src - 1] = false;
-		check[dst - 1] = false;
-	}
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			//cout << d[i][j] << " ";
+		int s, d, answer;
+		cin >> s >> d;
+		answer = abs(xs[s - 1] - xs[d - 1]) + abs(ys[s - 1] - ys[d - 1]);
+		/*if (!sp[s - 1] and !sp[d - 1]) {
+			for (int j = 0; j < n; j++) {
+				for (int k = 0; k < n; k++) {
+					if (j >= k) continue;
+					if (!sp[j] or !sp[k]) continue;
+					int a = abs(xs[s - 1] - xs[j]) + abs(ys[s - 1] - ys[j]) + abs(xs[d - 1] - xs[k]) + abs(ys[d - 1] - ys[k]);
+					int b = abs(xs[s - 1] - xs[k]) + abs(ys[s - 1] - ys[k]) + abs(xs[d - 1] - xs[j]) + abs(ys[d - 1] - ys[j]);
+					int val = a < b ? a : b;
+					if (val + t < answer) answer = val + t;
+				}
+			}
 		}
-		//cout << endl;
+		else if (sp[s - 1] and !sp[d - 1]) {
+			for (int j = 0; j < n; j++) {
+				if (!sp[j]) continue;
+				if (s - 1 == j) continue;
+				int temp = abs(xs[d - 1] - xs[j]) + abs(ys[d - 1] - ys[j]) + t;
+				if (temp < answer) answer = temp;
+			}
+		}
+		else if (!sp[s - 1] and sp[d - 1]) {
+			for (int j = 0; j < n; j++) {
+				if (!sp[j]) continue;
+				if (d - 1 == j) continue;
+				int temp = abs(xs[s - 1] - xs[j]) + abs(ys[s - 1] - ys[j]) + t;
+				if (temp < answer) answer = temp;
+			}
+		}
+		else {
+			if (t < answer) answer = t;
+		}*/
+		int a = 2000, b = 2000;
+		for (int j = 0; j < n; j++) {
+			if (sp[j]) {
+				int temp;
+				temp = abs(xs[s - 1] - xs[j]) + abs(ys[s - 1] - ys[j]);
+				a = temp < a ? temp : a;
+				temp = abs(xs[d - 1] - xs[j]) + abs(ys[d - 1] - ys[j]);
+				b = temp < b ? temp : b;
+			}
+		}
+		answer = a + b + t < answer ? a + b + t : answer;
+		cout << answer << endl;
 	}
 }
